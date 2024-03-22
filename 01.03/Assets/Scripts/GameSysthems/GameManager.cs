@@ -1,5 +1,5 @@
 using LaneSystem;
-//using ObstacleSystem;
+using ObstacleSystem;
 using PlayerSystems;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 {
     #region Variables
     [SerializeField] private LaneSystem.LaneManager m_laneManager;
-    //[SerializeField] private ObstacleManager m_obstacleManager;
+    [SerializeField] private ObstacleManager m_obstacleManager;
     [SerializeField] PlayerController m_playerController;
     #endregion
 
@@ -44,10 +44,10 @@ public class GameManager : MonoBehaviour
     private void GameStarted()
     {
         Debug.Log("Started");
-        //if (m_obstacleManager != null)
-        //{
-        //    m_obstacleManager.StartObstacles();
-        //}
+        if (m_obstacleManager != null)
+        {
+            m_obstacleManager.StartObstacles();
+        }
         GameEnded();
     }
 
@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Reset");
         m_playerController.ResetPlayer();
-        //m_obstacleManager.WipeObstacles();
+        m_obstacleManager.WipeObstacles();
     }
     #endregion
 
