@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private LaneSystem.LaneManager m_laneManager;
     [SerializeField] private ObstacleManager m_obstacleManager;
     [SerializeField] PlayerController m_playerController;
+    [SerializeField] private ScoreManager m_scoreManager;
     #endregion
 
     #region Private Functions
@@ -29,8 +30,8 @@ public class GameManager : MonoBehaviour
         }
     }
     //Temp 
-
-    private void InitialiseGame()
+    //Method that starts the game
+    public void InitialiseGame()
     {
         if (m_laneManager != null)
         {
@@ -38,6 +39,7 @@ public class GameManager : MonoBehaviour
         }
         ResetGameState();
         GameStarted();
+        Time.timeScale = 1;
     }
 
     private void GameStarted()
@@ -53,11 +55,12 @@ public class GameManager : MonoBehaviour
     {
 
     }
-
+    //Method that resets everything in order to restart the game
     private void ResetGameState()
     {
         m_playerController.ResetPlayer();
         m_obstacleManager.WipeObstacles();
+        m_scoreManager.ResetScore();
     }
     #endregion
 }

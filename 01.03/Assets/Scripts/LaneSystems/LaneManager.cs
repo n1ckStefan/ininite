@@ -9,12 +9,12 @@ namespace LaneSystem
         #region Variables
         public int middleIndex;
         [SerializeField] public Lane[] lanes;
-        public float m_laneSpacing = 8f;
-        [SerializeField] private int m_laneNumber;
+        private int m_laneNumber = 3;
         #endregion
 
 
         #region Private Functions
+        //Draws the lanes, for testing and editing purposes
         private void OnDrawGizmos()
         {
             for (int i = 0; i < lanes.Length; i++)
@@ -34,6 +34,9 @@ namespace LaneSystem
 
 
         #region Public Functions
+        //This method calculates the middle index of the lanes array
+        //It then loops through each index of the lanes array
+        //And creates a new lane on each position
         public void InitialiseLanes()
         {
             middleIndex = Mathf.FloorToInt(m_laneNumber / 2.0f);

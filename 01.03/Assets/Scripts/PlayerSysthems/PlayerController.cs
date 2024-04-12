@@ -12,12 +12,20 @@ namespace PlayerSystems
 
         [SerializeField] private LaneManager m_laneManager;
         [SerializeField] private float m_speed;
-
+        [SerializeField] private ScoreManager m_sm;
         private int m_laneIndex;
+        private GameManager m_gameManager;
         private Coroutine m_moveCoroutine;
         #endregion
 
+
         #region Private Functions
+        private void Awake()
+        {
+            m_gameManager = FindObjectOfType<GameManager>();
+        }
+
+        //If A is pressed take away 1 from the lanes index, if D is pressed add 1
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.A))
@@ -30,6 +38,7 @@ namespace PlayerSystems
             }
             BounceOffset();
         }
+        //This method is being called when A or D are pressed, it gets the next lae and moves the player there
         private void GetNextLane(int _direction)
         {
             if (m_laneIndex + _direction < 0)
@@ -54,6 +63,8 @@ namespace PlayerSystems
                 transform.position = bouncePosition;
             }
         }
+        //This is the code that is responsible for the actual physical movement of the player
+        //It moves them by a speed of t which is a result of Time.deltaTime and the m_speed variable
         private IEnumerator PlayerLerp(Lane _targetLane)
         {
             float t = 0;
@@ -71,9 +82,30 @@ namespace PlayerSystems
             currentLane.playerOccupied = true;
             m_moveCoroutine = null;
         }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.tag == "Obstacle")
+            {
+                Time.timeScale = 0.25f;
+                StartCoroutine(TriggerDelay());
+            }
+            if (other.gameObject.tag == "Coin")
+            {
+                Destroy(other.gameObject);
+                m_sm.AddScore(5);
+            }
+        }
+
+        private IEnumerator TriggerDelay()
+        {
+            yield return new WaitForSeconds(0.1f);
+            m_gameManager.InitialiseGame();
+        }
         #endregion
 
         #region Public functions
+        //The function below takes cae of reseting the lane hat the player is currently on and moving them in the middle lane, if they're not there already
         public void ResetPlayer()
         {
             currentLane.playerOccupied = false;
@@ -82,6 +114,8 @@ namespace PlayerSystems
             transform.position = currentLane.position;
             currentLane.playerOccupied = true;
         }
+        //This code checks if the lane the player is trying to move to is valid and moves them to the target lane if it is
+        //The method prevents the player from moving to a non existing lane
         public void MoveToNewLane(Lane _targetLane)
         {
             if (_targetLane == null)

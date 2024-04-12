@@ -35,7 +35,7 @@ namespace ObstacleSystem
             }
 
         }
-
+        //Destroys the chunk if it collides with a particular box collider
         private void OnTriggerEnter(Collider _other)
         {
             if (_other.tag == "DeathCube")
@@ -46,6 +46,7 @@ namespace ObstacleSystem
         #endregion
 
         #region Public Functions
+        //Called in the fixed update Tick() moves the chunks towards the player
         public void Tick()
         {
             if (m_rb == null)
