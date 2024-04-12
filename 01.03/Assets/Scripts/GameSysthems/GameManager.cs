@@ -32,7 +32,6 @@ public class GameManager : MonoBehaviour
 
     private void InitialiseGame()
     {
-        Debug.Log("Init");
         if (m_laneManager != null)
         {
             m_laneManager.InitialiseLanes();
@@ -43,7 +42,6 @@ public class GameManager : MonoBehaviour
 
     private void GameStarted()
     {
-        Debug.Log("Started");
         if (m_obstacleManager != null)
         {
             m_obstacleManager.StartObstacles();
@@ -53,17 +51,13 @@ public class GameManager : MonoBehaviour
 
     private void GameEnded()
     {
-        Debug.Log("Ended");
+
     }
 
     private void ResetGameState()
     {
-        Debug.Log("Reset");
         m_playerController.ResetPlayer();
         m_obstacleManager.WipeObstacles();
     }
-    #endregion
-
-    #region Public Functions
     #endregion
 }

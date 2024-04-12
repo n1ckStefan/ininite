@@ -9,7 +9,7 @@ namespace LaneSystem
         #region Variables
         public int middleIndex;
         [SerializeField] public Lane[] lanes;
-        [SerializeField] public float m_laneSpacing;
+        public float m_laneSpacing = 8f;
         [SerializeField] private int m_laneNumber;
         #endregion
 
@@ -40,7 +40,7 @@ namespace LaneSystem
             lanes = new Lane[m_laneNumber];
             for (int i = 0; i < lanes.Length; i++)
             {
-                lanes[i] = new Lane(true, new Vector3((i - (middleIndex)) * m_laneSpacing, 0, 0));
+                lanes[i] = new Lane(true, new Vector3((i - (middleIndex)) * 2.7f, 0, 0));
             }
         }
         #endregion
