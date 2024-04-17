@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 namespace PlayerSystems
 {
     public class PlayerController : MonoBehaviour
@@ -16,13 +18,19 @@ namespace PlayerSystems
         private int m_laneIndex;
         private GameManager m_gameManager;
         private Coroutine m_moveCoroutine;
-        #endregion
+        private float m_jumpForce = 10f;
+        [SerializeField] private LayerMask m_groundLayer;
+        private float m_groundCheckDistance = 0.1f;
+        private Rigidbody m_playerRb;
+        private bool m_isGrounded;
 
+        #endregion
 
         #region Private Functions
         private void Awake()
         {
             m_gameManager = FindObjectOfType<GameManager>();
+            m_playerRb = GetComponent<Rigidbody>();
         }
 
         //If A is pressed take away 1 from the lanes index, if D is pressed add 1
@@ -36,8 +44,24 @@ namespace PlayerSystems
             {
                 GetNextLane(1);
             }
+
+            m_isGrounded = Physics.Raycast(transform.position, Vector3.down, m_groundCheckDistance, m_groundLayer);
+            if (m_isGrounded && Input.GetKeyDown(KeyCode.Space))
+            {
+                Jump();
+            }
+
             BounceOffset();
         }
+
+        //Jump Method
+        void Jump()
+        {
+            Debug.Log("dve plus dve z amen e pet");
+            // Apply jump force
+            m_playerRb.velocity = new Vector3(m_playerRb.velocity.x, m_jumpForce, m_playerRb.velocity.z);
+        }
+
         //This method is being called when A or D are pressed, it gets the next lae and moves the player there
         private void GetNextLane(int _direction)
         {
@@ -89,6 +113,7 @@ namespace PlayerSystems
             {
                 Time.timeScale = 0.25f;
                 StartCoroutine(TriggerDelay());
+                m_gameManager.GameEnded();
             }
             if (other.gameObject.tag == "Coin")
             {
@@ -100,7 +125,7 @@ namespace PlayerSystems
         private IEnumerator TriggerDelay()
         {
             yield return new WaitForSeconds(0.1f);
-            m_gameManager.InitialiseGame();
+            
         }
         #endregion
 

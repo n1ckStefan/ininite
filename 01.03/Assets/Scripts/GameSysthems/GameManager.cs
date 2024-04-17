@@ -4,6 +4,7 @@ using PlayerSystems;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -48,12 +49,12 @@ public class GameManager : MonoBehaviour
         {
             m_obstacleManager.StartObstacles();
         }
-        GameEnded();
+        //GameEnded();
     }
 
-    private void GameEnded()
+    public void GameEnded()
     {
-
+        SceneManager.LoadScene(1);
     }
     //Method that resets everything in order to restart the game
     private void ResetGameState()
