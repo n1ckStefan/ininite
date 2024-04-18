@@ -57,7 +57,7 @@ namespace PlayerSystems
         //Jump Method
         void Jump()
         {
-            Debug.Log("dve plus dve z amen e pet");
+            Debug.Log("jump");
             // Apply jump force
             m_playerRb.velocity = new Vector3(m_playerRb.velocity.x, m_jumpForce, m_playerRb.velocity.z);
         }
@@ -83,7 +83,7 @@ namespace PlayerSystems
             if (m_moveCoroutine == null)
             {
                 Vector3 bouncePosition = transform.position;
-                bouncePosition.y = Mathf.Sin(Time.fixedTime * 15) * 0.15f;
+                bouncePosition.y = Mathf.Sin(Time.fixedTime * 15) * 0.13f;
                 transform.position = bouncePosition;
             }
         }
