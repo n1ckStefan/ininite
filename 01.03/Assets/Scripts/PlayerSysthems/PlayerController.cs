@@ -18,11 +18,10 @@ namespace PlayerSystems
         private int m_laneIndex;
         private GameManager m_gameManager;
         private Coroutine m_moveCoroutine;
-        private float m_jumpForce = 10f;
+        private float m_jumpForce = 0.5f;
         [SerializeField] private LayerMask m_groundLayer;
-        private float m_groundCheckDistance = 0.1f;
+        private float m_groundCheckDistance = 2f;
         private Rigidbody m_playerRb;
-        private bool m_isGrounded;
 
         #endregion
 
@@ -45,12 +44,12 @@ namespace PlayerSystems
                 GetNextLane(1);
             }
 
-            m_isGrounded = Physics.Raycast(transform.position, Vector3.down, m_groundCheckDistance, m_groundLayer);
-            if (m_isGrounded && Input.GetKeyDown(KeyCode.Space))
+            RaycastHit m_hit;
+            if (Physics.Raycast(transform.position, Vector3.down, out m_hit, m_groundCheckDistance, m_groundLayer) && Input.GetKeyDown(KeyCode.Space))
             {
                 Jump();
             }
-
+            
             BounceOffset();
         }
 
@@ -59,7 +58,11 @@ namespace PlayerSystems
         {
             Debug.Log("jump");
             // Apply jump force
-            m_playerRb.velocity = new Vector3(m_playerRb.velocity.x, m_jumpForce, m_playerRb.velocity.z);
+            Vector3 bouncePosition = transform.position;
+            bouncePosition.y = Mathf.Sin(1) * 3;
+            transform.position = bouncePosition;
+
+
         }
 
         //This method is being called when A or D are pressed, it gets the next lae and moves the player there
@@ -84,7 +87,7 @@ namespace PlayerSystems
             {
                 Vector3 bouncePosition = transform.position;
                 bouncePosition.y = Mathf.Sin(Time.fixedTime * 15) * 0.13f;
-                transform.position = bouncePosition;
+                //transform.position = bouncePosition;
             }
         }
         //This is the code that is responsible for the actual physical movement of the player
@@ -111,9 +114,10 @@ namespace PlayerSystems
         {
             if (other.gameObject.tag == "Obstacle")
             {
+                m_playerRb.AddForce(0, 100, -100);
                 Time.timeScale = 0.25f;
                 StartCoroutine(TriggerDelay());
-                m_gameManager.GameEnded();
+                
             }
             if (other.gameObject.tag == "Coin")
             {
@@ -125,7 +129,7 @@ namespace PlayerSystems
         private IEnumerator TriggerDelay()
         {
             yield return new WaitForSeconds(0.1f);
-            
+            m_gameManager.GameEnded();
         }
         #endregion
 

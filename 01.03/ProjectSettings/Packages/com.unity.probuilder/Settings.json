@@ -129,7 +129,11 @@
             {
                 "type": "UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
                 "key": "ShapeBuilder.LastSize",
+<<<<<<< HEAD
                 "value": "{\"m_Value\":{\"x\":1.5319595336914063,\"y\":0.5638777017593384,\"z\":-0.2872776985168457}}"
+=======
+                "value": "{\"m_Value\":{\"x\":1.7318668365478516,\"y\":1.5761425495147706,\"z\":-0.7698434591293335}}"
+>>>>>>> origin/main
             },
             {
                 "type": "UnityEngine.Quaternion, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
@@ -168,7 +172,11 @@
             },
             {
                 "type": "UnityEngine.ProBuilder.Shapes.Shape, Unity.ProBuilder, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+<<<<<<< HEAD
                 "key": "ShapeBuilder.Plane",
+=======
+                "key": "ShapeBuilder.Door",
+>>>>>>> origin/main
                 "value": "{}"
             },
             {
