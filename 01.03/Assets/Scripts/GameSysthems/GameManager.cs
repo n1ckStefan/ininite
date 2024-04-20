@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
 
     public void GameEnded()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
     //Method that resets everything in order to restart the game
     private void ResetGameState()

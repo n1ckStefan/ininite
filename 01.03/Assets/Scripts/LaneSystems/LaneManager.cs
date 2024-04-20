@@ -43,7 +43,7 @@ namespace LaneSystem
             lanes = new Lane[m_laneNumber];
             for (int i = 0; i < lanes.Length; i++)
             {
-                lanes[i] = new Lane(true, new Vector3((i - (middleIndex)) * 2.7f, 0, 0));
+                lanes[i] = new Lane(true, new Vector3((i - (middleIndex)) * 2.7f, 0, 30));
             }
         }
         #endregion

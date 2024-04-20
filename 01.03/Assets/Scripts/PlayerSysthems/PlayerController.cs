@@ -18,11 +18,10 @@ namespace PlayerSystems
         private int m_laneIndex;
         private GameManager m_gameManager;
         private Coroutine m_moveCoroutine;
-        private float m_jumpForce = 0.5f;
         [SerializeField] private LayerMask m_groundLayer;
         private float m_groundCheckDistance = 2f;
         private Rigidbody m_playerRb;
-
+        [SerializeField] GameObject m_ground;
         #endregion
 
         #region Private Functions
@@ -35,6 +34,7 @@ namespace PlayerSystems
         //If A is pressed take away 1 from the lanes index, if D is pressed add 1
         private void Update()
         {
+            Debug.Log(Vector3.Distance(transform.position,m_ground.transform.position));
             if (Input.GetKeyDown(KeyCode.A))
             {
                 GetNextLane(-1);
@@ -49,20 +49,24 @@ namespace PlayerSystems
             {
                 Jump();
             }
-            
-            BounceOffset();
         }
 
+
+
+       
         //Jump Method
         void Jump()
         {
             Debug.Log("jump");
             // Apply jump force
-            Vector3 bouncePosition = transform.position;
-            bouncePosition.y = Mathf.Sin(1) * 3;
-            transform.position = bouncePosition;
+            Vector3 jumpPosition = transform.position;
+            jumpPosition.y = Mathf.Sin(Mathf.PI*Time.deltaTime) * 100f;
+            transform.position = jumpPosition;
+        }
 
-
+        void FastFall()
+        {
+            m_playerRb.AddForce(0, -10, 0, ForceMode.Impulse);
         }
 
         //This method is being called when A or D are pressed, it gets the next lae and moves the player there
@@ -81,29 +85,25 @@ namespace PlayerSystems
             return;
         }
 
-        private void BounceOffset()
-        {
-            if (m_moveCoroutine == null)
-            {
-                Vector3 bouncePosition = transform.position;
-                bouncePosition.y = Mathf.Sin(Time.fixedTime * 15) * 0.13f;
-                //transform.position = bouncePosition;
-            }
-        }
         //This is the code that is responsible for the actual physical movement of the player
         //It moves them by a speed of t which is a result of Time.deltaTime and the m_speed variable
         private IEnumerator PlayerLerp(Lane _targetLane)
         {
             float t = 0;
             Vector3 currentPos = transform.position;
+            Vector3 targetPosition = _targetLane.position;
+            targetPosition.y = currentPos.y; // Maintain the same y-coordinate
+
             while (t <= 1)
             {
                 t += Time.deltaTime * m_speed;
-                Vector3 targetPosition = _targetLane.position;
-                targetPosition.y = Mathf.Sin(1 - t) * 5;
                 transform.position = Vector3.Lerp(currentPos, targetPosition, t);
                 yield return null;
             }
+
+            // Ensure the object reaches exactly the target position
+            transform.position = targetPosition;
+
             currentLane.playerOccupied = false;
             currentLane = _targetLane;
             currentLane.playerOccupied = true;
@@ -114,10 +114,8 @@ namespace PlayerSystems
         {
             if (other.gameObject.tag == "Obstacle")
             {
-                m_playerRb.AddForce(0, 100, -100);
                 Time.timeScale = 0.25f;
                 StartCoroutine(TriggerDelay());
-                
             }
             if (other.gameObject.tag == "Coin")
             {
