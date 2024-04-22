@@ -2,6 +2,7 @@ using LaneSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 
@@ -23,6 +24,8 @@ namespace PlayerSystems
         private Rigidbody m_playerRb;
         [SerializeField] GameObject m_ground;
         [SerializeField] GameObject m_ray;
+        [SerializeField] AudioSource CoinAudio;
+        [SerializeField] AudioSource DeathAudio;
         #endregion
 
         #region Private Functions
@@ -123,12 +126,14 @@ namespace PlayerSystems
             if (other.gameObject.tag == "Obstacle")
             {
                 m_playerRb.AddForce(Vector3.up * 50, ForceMode.Impulse);
+                DeathAudio.Play();
                 Time.timeScale = 0.25f;
                 StartCoroutine(TriggerDelay());
             }
             if (other.gameObject.tag == "Coin")
             {
                 Destroy(other.gameObject);
+                CoinAudio.Play();
                 m_sm.AddScore(5);
             }
         }
