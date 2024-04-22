@@ -19,9 +19,10 @@ namespace PlayerSystems
         private GameManager m_gameManager;
         private Coroutine m_moveCoroutine;
         [SerializeField] private LayerMask m_groundLayer;
-        private float m_groundCheckDistance = 2f;
+        private float m_groundCheckDistance = 0.1f;
         private Rigidbody m_playerRb;
         [SerializeField] GameObject m_ground;
+        [SerializeField] GameObject m_ray;
         #endregion
 
         #region Private Functions
@@ -44,10 +45,9 @@ namespace PlayerSystems
                 GetNextLane(1);
             }
 
-            RaycastHit m_hit;
-            if (Physics.Raycast(transform.position, Vector3.down, out m_hit, m_groundCheckDistance, m_groundLayer) && Input.GetKeyDown(KeyCode.Space))
+            if (Physics.Raycast(m_ray.transform.position, Vector3.down, m_groundCheckDistance, m_groundLayer) && Input.GetKeyDown(KeyCode.Space))
             {
-                Jump();
+                StartCoroutine(Jump());
             }
         }
 
@@ -55,19 +55,26 @@ namespace PlayerSystems
 
        
         //Jump Method
-        void Jump()
+        private IEnumerator Jump()
         {
             Debug.Log("jump");
             // Apply jump force
+            float time = 0f;
+            float duration = 0.5f;
             Vector3 jumpPosition = transform.position;
-            jumpPosition.y = Mathf.Sin(Mathf.PI*Time.deltaTime) * 100f;
-            transform.position = jumpPosition;
+            while (time < duration) 
+            {
+                time += Time.deltaTime;
+                float jumpProgress = time / duration;
+                float verticalOffset = Mathf.Sin(jumpProgress * Mathf.PI) * 0.03f;
+
+                transform.position = Vector3.Lerp(transform.position, transform.position + Vector3.up * 0.03f, jumpProgress);
+                transform.position += Vector3.up * verticalOffset;
+                
+                yield return null;
+            }
         }
 
-        void FastFall()
-        {
-            m_playerRb.AddForce(0, -10, 0, ForceMode.Impulse);
-        }
 
         //This method is being called when A or D are pressed, it gets the next lae and moves the player there
         private void GetNextLane(int _direction)
@@ -110,10 +117,12 @@ namespace PlayerSystems
             m_moveCoroutine = null;
         }
 
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.tag == "Obstacle")
             {
+                m_playerRb.AddForce(Vector3.up * 50, ForceMode.Impulse);
                 Time.timeScale = 0.25f;
                 StartCoroutine(TriggerDelay());
             }
